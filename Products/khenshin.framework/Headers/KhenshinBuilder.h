@@ -55,6 +55,7 @@
 @property (strong, nonatomic) NSBundle*          localCacheBundle;
 @property (strong, nonatomic) UIImage*           backgroundImage;
 @property (strong, nonatomic) UIImage*           spinnerImage;
-
+@property NSString *                             decimalSeparator;
+@property NSString *                             groupingSeparator;
 - (void) build;
 @end
