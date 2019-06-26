@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "khenshin"
-  s.version      = "1.528"
+  s.version      = "1.530"
   s.summary      = "khenshin es una biblioteca que convierte sitios web en APIs read-write."
   s.description  = <<-DESC
   		khenshin es una biblioteca desarrollada por khipu.com, se utiliza para mejorar la experiencia de pago de todos los medios de pago soportados en khipu.com y para otros procesos originalmente Web.
