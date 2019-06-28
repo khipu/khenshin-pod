@@ -75,7 +75,6 @@
                       navigationController:(UINavigationController *) navigationController;
 
 + (void) setAutomatonTimeout:(NSTimeInterval) timeout;
-+ (void) setFormTimeout:(NSTimeInterval) timeout;
 + (void) setGoogleTracker:(id<GAITracker>) tracker;
 + (void) setPreferredStatusBarStyle:(UIStatusBarStyle) preferredStatusBarStyle;
 + (void) setPrefersStatusBarHidden:(BOOL) prefersStatusBarHidden;
