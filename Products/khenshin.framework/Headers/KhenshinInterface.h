@@ -139,6 +139,4 @@
                  andProcess:(NSString *) process
                  andMessage:(NSString *) message;
 
-+ (void) applicationDidEnterBackground;
-
 @end
