@@ -24,6 +24,7 @@
 @property UIViewController<ProcessExit> *        processSuccess;
 @property UIViewController<ProcessExit> *        processWarning;
 @property BOOL                                   allowCredentialsSaving;
+@property BOOL                                   allowExtendedPlayOnBackground;
 @property NSInteger                              mainButtonStyle;
 @property BOOL                                   hideWebAddressInformationInForm;
 @property BOOL                                   useBarCenteredLogoInForm;
