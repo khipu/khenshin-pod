@@ -6,6 +6,10 @@
 //  Copyright © 2016 khipu. All rights reserved.
 //
 
+#ifndef DEBUG
+   #define NSLog(...);
+#endif
+
 #import <UIKit/UIKit.h>
 
 //! Project version number for engine.
