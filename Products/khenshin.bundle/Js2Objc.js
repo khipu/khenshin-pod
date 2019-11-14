@@ -2,7 +2,7 @@ function js2ocCreateMessenger(message) {
     var iframe = document.createElement('IFRAME');
     iframe.setAttribute('style', 'display: none');
     iframe.setAttribute('src', document.location.protocol + '//' + document.location.hostname + '/__khenshinioscall__/' + message);
-    iframe.setAttribute('id', 'khenshinioscall' + new Date().getTime() + Math.random());
+    iframe.setAttribute('id', 'khenshin-helper-ioscall' + new Date().getTime() + Math.random());
     document.documentElement.appendChild(iframe);
 
     setTimeout(function (id) {
