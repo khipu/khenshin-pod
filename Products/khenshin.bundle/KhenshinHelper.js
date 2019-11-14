@@ -1,5 +1,161 @@
 (function(f){var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.KhenshinHelper = f()})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
         "use strict";
+        Object.defineProperty(exports, "__esModule", { value: true });
+        var Capture_1 = _dereq_("./capture/Capture");
+        var lastAlert = [];
+        var frameCounter = 0;
+        var find = function (selector, frameName) {
+            if (typeof frameName !== 'undefined') {
+                return frames[frameName].document.querySelector(selector);
+            }
+            return document.querySelector(selector);
+        };
+        exports.find = find;
+        var findAll = function (selector, frameName) {
+            if (typeof frameName !== 'undefined') {
+                return frames[frameName].document.querySelectorAll(selector);
+            }
+            return document.querySelectorAll(selector);
+        };
+        exports.findAll = findAll;
+        var testAlert = function (exp) {
+            if (exp.test(lastAlert[0])) {
+                lastAlert = [];
+                console.log('test alert: true');
+                return true;
+            }
+            console.log('test alert: false');
+        };
+        exports.testAlert = testAlert;
+        var getAlertMessage = function () {
+            if (lastAlert && lastAlert.length > 0) {
+                return lastAlert[0];
+            }
+            return null;
+        };
+        exports.getAlertMessage = getAlertMessage;
+        var sleep = function (milliSeconds) {
+            var startTime = new Date().getTime();
+            while (new Date().getTime() < startTime + milliSeconds) {
+            }
+        };
+        exports.sleep = sleep;
+        var getJavascriptVariables = function () {
+            var khipuVariables = {};
+            Object.keys(window).forEach(function (key) {
+                if (window[key] && window[key].toString().indexOf('native code') < 0) {
+                    if (typeof window[key] === 'number' || (typeof window[key]) === 'string') {
+                        khipuVariables[key] = window[key];
+                    }
+                    else {
+                        khipuVariables[key] = typeof window[key];
+                    }
+                }
+            });
+            return khipuVariables;
+        };
+        exports.getJavascriptVariables = getJavascriptVariables;
+        var captureOptions = {
+            prefixForNewGeneratedClasses: 'kh',
+            tagsOfIgnoredDocHeadElements: ['style'],
+        };
+        var getHtml = function () {
+            var capturer = new Capture_1.Capture();
+            fixFrameNames(window.document);
+            var html = {
+                'main-frame': {
+                    url: window.location.href,
+                    base: window.location.origin,
+                    source: capturer.capture('string', window.document, captureOptions),
+                },
+            };
+            if (typeof frames !== 'undefined') {
+                getFrames(frames, html);
+            }
+            return html;
+        };
+        exports.getHtml = getHtml;
+        var fixFrameNames = function (doc) {
+            doc.querySelectorAll('frame').forEach(function (frame) {
+                try {
+                    var myframe = frame;
+                    myframe.name = typeof myframe.name !== 'undefined' && myframe.name.length > 0 ? myframe.name : 'frame-' + (frameCounter++);
+                    if (myframe.contentWindow != null) {
+                        myframe.contentWindow.name = myframe.name;
+                    }
+                }
+                catch (e) {
+                    console.error('Couldn\'t fix frame name: ' + e);
+                }
+            });
+            doc.querySelectorAll('iframe').forEach(function (frame) {
+                try {
+                    var myframe = frame;
+                    myframe.name = typeof myframe.name !== 'undefined' && myframe.name.length > 0 ? myframe.name : 'iframe-' + (frameCounter++);
+                    if (myframe.contentWindow != null) {
+                        myframe.contentWindow.name = myframe.name;
+                    }
+                }
+                catch (e) {
+                    console.error('Couldn\'t fix iframe name: ' + e);
+                }
+            });
+        };
+        var getFrames = function (frameset, map) {
+            var capturer = new Capture_1.Capture();
+            for (var _i = 0, frameset_1 = frameset; _i < frameset_1.length; _i++) {
+                var frame = frameset_1[_i];
+                try {
+                    if (frame.id != null && frame.id.startsWith('khenshin-helper')) {
+                        continue;
+                    }
+                }
+                catch (e) {
+                    console.error('Couldn\'t check iframe id name: ' + e);
+                }
+                var url = void 0;
+                var source = void 0;
+                var frameName = void 0;
+                try {
+                    fixFrameNames(frame.document);
+                    frameName = typeof frame.name !== 'undefined' && frame.name.length > 0 ? frame.name : 'frame-' + (Object.keys(map).length + 1);
+                    url = frame.location.href;
+                    source = capturer.capture('string', frame.document, captureOptions);
+                }
+                catch (e) {
+                    console.error('Couldn\'t fetch frame attributes: ' + e);
+                    url = 'error';
+                    source = 'error';
+                    frameName = 'error';
+                }
+                map[frameName] = {
+                    url: url,
+                    source: source,
+                };
+                if (typeof frame.frames !== 'undefined') {
+                    getFrames(frame.frames, map);
+                }
+            }
+        };
+        exports.getFrames = getFrames;
+        var getCookieValue = function (cookieName) {
+            var name = cookieName + '=';
+            var ca = document.cookie.split(';');
+            for (var _i = 0, ca_1 = ca; _i < ca_1.length; _i++) {
+                var c = ca_1[_i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return '';
+        };
+        exports.getCookieValue = getCookieValue;
+
+    },{"./capture/Capture":2}],2:[function(_dereq_,module,exports){
+        "use strict";
         var __assign = (this && this.__assign) || function () {
             __assign = Object.assign || function(t) {
                 for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -25,7 +181,6 @@
                 this._shouldHandleImgDataUrl = true;
                 this._logger = new Logger_1.Logger();
                 this._isHead = true;
-                this._classMap = {};
                 this._classCount = 0;
                 this._shouldHandleImgDataUrl = true;
                 this._doc = document;
@@ -72,6 +227,25 @@
                     || domElm.tagName.toLowerCase() === 'frame'
                     || domElm.tagName.toLowerCase() === 'iframe';
             };
+            Capture._getDefaultCss = function (tagname) {
+                var frameId = 'khenshin-helper-css-iframe-id';
+                var iframe = document.querySelector('#' + frameId);
+                if (iframe == null) {
+                    iframe = document.createElement('iframe');
+                    iframe.id = frameId;
+                    document.body.appendChild(iframe);
+                }
+                var window = iframe.contentWindow;
+                if (window == null) {
+                    return null;
+                }
+                var elem = window.document.querySelector(tagname);
+                if (elem == null) {
+                    elem = window.document.createElement(tagname);
+                    window.document.body.appendChild(elem);
+                }
+                return getComputedStyle(elem);
+            };
             Capture.prototype.capture = function (outputType, htmlDocument, options) {
                 var output = '';
                 var startTime = (new Date()).getTime();
@@ -93,7 +267,7 @@
             };
             Capture.prototype._overrideOptions = function (options) {
                 if (options) {
-                    this._options = __assign({}, this._options, options);
+                    this._options = __assign(__assign({}, this._options), options);
                 }
             };
             Capture.prototype._getImgDataUrl = function (imgElm) {
@@ -129,7 +303,7 @@
             };
             Capture.prototype._handleElmCss = function (domElm, newElm) {
                 // Ignoramos clases css de tag html
-                if (newElm.tagName.toLowerCase() === 'html') {
+                if (newElm.id.startsWith('khenshin-helper') || newElm.tagName.toLowerCase() === 'html') {
                     return;
                 }
                 if (this._getClasses(newElm).length > 0) {
@@ -146,10 +320,23 @@
                     newElm.removeAttribute('style');
                 }
                 var computedStyle = getComputedStyle(domElm);
+                var defaultStyle = Capture._getDefaultCss(domElm.tagName);
+                if (defaultStyle == null) {
+                    console.error('ERROR ' + domElm.tagName);
+                }
                 var classStr = '';
                 for (var i = 0; i < computedStyle.length; i++) {
                     var property = computedStyle.item(i);
                     var value = computedStyle.getPropertyValue(property);
+                    if (Capture.inheritedCssProperties.indexOf(property) > -1 && domElm.parentElement != null) {
+                        var parentStyle = getComputedStyle(domElm.parentElement);
+                        if (parentStyle.getPropertyValue(property) === value) {
+                            continue;
+                        }
+                    }
+                    if (Capture.inheritedCssProperties.indexOf(property) === -1 && defaultStyle != null && defaultStyle.getPropertyValue(property) === value) {
+                        continue;
+                    }
                     if (property == null || value == null || property.trim().length === 0 || value.trim().length === 0) {
                         continue;
                     }
@@ -218,6 +405,9 @@
                 return shouldRemoveElm;
             };
             Capture.prototype._recursiveWalk = function (domElm, newElm, handleCss) {
+                if (newElm == null) {
+                    return;
+                }
                 if (this._shouldHandleImgDataUrl && !this._isHead && domElm.tagName.toLowerCase() === 'img') {
                     var imgDataUrl = this._getImgDataUrl(domElm);
                     if (imgDataUrl) {
@@ -240,8 +430,23 @@
                     }
                     newElm.setAttribute('src', src);
                 }
+                if (newElm.tagName.toLowerCase() === 'script') {
+                    if (newElm.innerHTML.trim() !== '') {
+                        var html = newElm.innerHTML;
+                        html.replace('/*', '/KHOC*');
+                        html.replace('*/', '*KHOC/');
+                        newElm.innerHTML = '/*KHC \n' + html + '\n KHC*/';
+                    }
+                    if (newElm.hasAttribute('src')) {
+                        newElm.setAttribute('kh_src', newElm.getAttribute('src'));
+                        newElm.removeAttribute('src');
+                    }
+                }
                 if (domElm.children) {
                     for (var i = domElm.children.length - 1; i >= 0; i--) {
+                        if (domElm.id.startsWith('khenshin-helper')) {
+                            return;
+                        }
                         if (this._shouldIgnoreElm(domElm.children[i])) {
                             newElm.removeChild(newElm.children[i]);
                         }
@@ -252,8 +457,7 @@
                 }
             };
             Capture.prototype._createNewHtml = function () {
-                var newHtml = this._doc.documentElement.cloneNode(false);
-                return newHtml;
+                return this._doc.documentElement.cloneNode(false);
             };
             Capture.prototype._appendNewHead = function (newHtml) {
                 var newHead = this._doc.head.cloneNode(true);
@@ -300,11 +504,54 @@
                 return output;
             };
             Capture.excludedComputedCssProperties = ['alt'];
+            Capture.inheritedCssProperties = [
+                'azimuth',
+                'border-collapse',
+                'border-spacing',
+                'caption-side',
+                'color',
+                'cursor',
+                'direction',
+                'elevation',
+                'empty-cells',
+                'font-family',
+                'font-size',
+                'font-style',
+                'font-variant',
+                'font-weight',
+                'font',
+                'letter-spacing',
+                'line-height',
+                'list-style-image',
+                'list-style-position',
+                'list-style-type',
+                'list-style',
+                'orphans',
+                'pitch-range',
+                'pitch',
+                'quotes',
+                'richness',
+                'speak-header',
+                'speak-numeral',
+                'speak-punctuation',
+                'speak',
+                'speech-rate',
+                'stress',
+                'text-align',
+                'text-indent',
+                'text-transform',
+                'visibility',
+                'voice-family',
+                'volume',
+                'white-space',
+                'widows',
+                'word-spacing',
+            ];
             return Capture;
         }());
         exports.Capture = Capture;
 
-    },{"./Encoder":2,"./Logger":3}],2:[function(_dereq_,module,exports){
+    },{"./Encoder":3,"./Logger":4}],3:[function(_dereq_,module,exports){
         "use strict";
         Object.defineProperty(exports, "__esModule", { value: true });
         var _utf8_encode = function (str) {
@@ -369,7 +616,7 @@
             uriEncode: uriEncode,
         };
 
-    },{}],3:[function(_dereq_,module,exports){
+    },{}],4:[function(_dereq_,module,exports){
         "use strict";
         Object.defineProperty(exports, "__esModule", { value: true });
         var Logger = /** @class */ (function () {
@@ -407,124 +654,6 @@
         }());
         exports.Logger = Logger;
 
-    },{}],4:[function(_dereq_,module,exports){
-        "use strict";
-        Object.defineProperty(exports, "__esModule", { value: true });
-        var Capture_1 = _dereq_("../capture/Capture");
-        var lastAlert = [];
-        var find = function (selector, frameName) {
-            if (typeof frameName !== 'undefined') {
-                return frames[frameName].document.querySelector(selector);
-            }
-            return document.querySelector(selector);
-        };
-        exports.find = find;
-        var findAll = function (selector, frameName) {
-            if (typeof frameName !== 'undefined') {
-                return frames[frameName].document.querySelectorAll(selector);
-            }
-            return document.querySelectorAll(selector);
-        };
-        exports.findAll = findAll;
-        var testAlert = function (exp) {
-            if (exp.test(lastAlert[0])) {
-                lastAlert = [];
-                console.log('test alert: true');
-                return true;
-            }
-            console.log('test alert: false');
-        };
-        exports.testAlert = testAlert;
-        var getAlertMessage = function () {
-            if (lastAlert && lastAlert.length > 0) {
-                return lastAlert[0];
-            }
-            return null;
-        };
-        exports.getAlertMessage = getAlertMessage;
-        var sleep = function (milliSeconds) {
-            var startTime = new Date().getTime();
-            while (new Date().getTime() < startTime + milliSeconds) {
-            }
-        };
-        exports.sleep = sleep;
-        var getJavascriptVariables = function () {
-            var khipuVariables = {};
-            Object.keys(window).forEach(function (key) {
-                if (window[key] && window[key].toString().indexOf('native code') < 0) {
-                    if (typeof window[key] === 'number' || (typeof window[key]) === 'string') {
-                        khipuVariables[key] = window[key];
-                    }
-                    else {
-                        khipuVariables[key] = typeof window[key];
-                    }
-                }
-            });
-            return khipuVariables;
-        };
-        exports.getJavascriptVariables = getJavascriptVariables;
-        var captureOptions = {
-            prefixForNewGeneratedClasses: 'kh',
-            tagsOfIgnoredDocHeadElements: ['script', 'style'],
-        };
-        var getHtml = function () {
-            var capturer = new Capture_1.Capture();
-            var html = {
-                'main-frame': {
-                    url: window.location.href,
-                    base: window.location.origin,
-                    source: capturer.capture('string', window.document, captureOptions),
-                },
-            };
-            if (typeof frames !== 'undefined') {
-                getFrames(frames, html);
-            }
-            return html;
-        };
-        exports.getHtml = getHtml;
-        var getFrames = function (frameset, map) {
-            var capturer = new Capture_1.Capture();
-            for (var _i = 0, frameset_1 = frameset; _i < frameset_1.length; _i++) {
-                var frame = frameset_1[_i];
-                var url = void 0;
-                var source = void 0;
-                var frameName = void 0;
-                try {
-                    frameName = typeof frame.name !== 'undefined' && frame.name.length > 0 ? frame.name : 'frame-' + (Object.keys(map).length + 1);
-                    url = frame.location.href;
-                    source = capturer.capture('string', frame.document, captureOptions);
-                }
-                catch (e) {
-                    console.error('Couldn\'t fetch frame attributes: ' + e);
-                    url = 'error';
-                    source = 'error';
-                    frameName = 'error';
-                }
-                map[frameName] = {
-                    url: url,
-                    source: source,
-                };
-                if (typeof frame.frames !== 'undefined') {
-                    getFrames(frame.frames, map);
-                }
-            }
-        };
-        exports.getFrames = getFrames;
-        var getCookieValue = function (cookieName) {
-            var name = cookieName + '=';
-            var ca = document.cookie.split(';');
-            for (var _i = 0, ca_1 = ca; _i < ca_1.length; _i++) {
-                var c = ca_1[_i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) === 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return '';
-        };
-        exports.getCookieValue = getCookieValue;
-
-    },{"../capture/Capture":1}]},{},[4])(4)
+    },{}]},{},[1])(1)
 });
+//# sourceURL=khenshin-helper-v1.0.0.es5.js
