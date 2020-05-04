@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "khenshin"
-  s.version      = "1.611"
+  s.version      = "1.702"
   s.summary      = "khenshin es una biblioteca que convierte sitios web en APIs read-write."
   s.description  = <<-DESC
   		khenshin es una biblioteca desarrollada por khipu.com, se utiliza para mejorar la experiencia de pago de todos los medios de pago soportados en khipu.com y para otros procesos originalmente Web.
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license      = {
     :type => 'Copyright',
     :text => <<-LICENSE
-      Copyright 2019 khipu SpA. All rights reserved.
+      Copyright 2020 khipu SpA. All rights reserved.
       LICENSE
   }
   s.author             = { "Khipu SpA" => "support@khipu.com" }
