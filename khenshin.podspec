@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
   s.author             = { "Khipu SpA" => "support@khipu.com" }
   s.platform     = :ios
   s.source       = { :git => "https://github.com/khipu/khenshin-pod.git", :tag => "#{s.version}" }
+  s.ios.deployment_target = '9.0'
   s.vendored_frameworks = 'Products/khenshin.framework'
   s.resource = "Products/khenshin.bundle"
   s.library = "xml2"
