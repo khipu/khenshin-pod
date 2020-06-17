@@ -2,7 +2,7 @@
 oldConsole = console;
 console = new Object();
 console.log = function(log) {
-    window.webkit.messageHandlers.consoleLog.postMessage({message: log});
+	__js2oc('console#' + log);
     oldConsole.log(log);
 }
 console.debug = console.log;

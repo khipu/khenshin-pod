@@ -20,6 +20,7 @@ FOUNDATION_EXPORT const unsigned char engineVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <engine/PublicHeader.h>
 
+#import <khenshin/KHResourceFilterURLProtocol.h>
 #import <khenshin/ProcessHeader.h>
 #import <khenshin/ProcessExit.h>
 #import <khenshin/KhenshinEnums.h>
