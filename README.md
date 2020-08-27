@@ -9,3 +9,4 @@ Add the following line to your Podfile
 Updates your pods
 
     pod install
+
