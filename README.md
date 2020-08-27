@@ -10,3 +10,7 @@ Updates your pods
 
     pod install
 
+
+## Releases & Changelog
+
+Check the latest updates in the [Releases page](https://github.com/khipu/khenshin-pod/releases)
