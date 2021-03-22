@@ -23,6 +23,8 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.xcconfig  =  { 'LIBRARY_SEARCH_PATHS' => '"$(PODS_ROOT)/khenshin"',
                    'HEADER_SEARCH_PATHS' => '"${PODS_ROOT}/Headers/khenshin"' }
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.dependency "AFNetworking", "4.0.1"
   s.dependency "JSONModel", "1.7.0"
   s.dependency "PPTopMostController", "0.0.1"
