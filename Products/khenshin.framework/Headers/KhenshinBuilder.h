@@ -45,6 +45,8 @@
 @property UIFont *                               font;
 @property UIFont *                               fontBold;
 @property UIFont *                               fontLight;
+@property UIFont *                               fontPlaceholder;
+@property UIFont *                               fontCoordinates;
 @property BOOL                                   skipExitPage;
 @property BOOL                                   keepCookies;
 @property UIImage *                              topCellBackgroundImage;
@@ -58,5 +60,6 @@
 @property (strong, nonatomic) UIImage*           spinnerImage;
 @property NSString *                             decimalSeparator;
 @property NSString *                             groupingSeparator;
+@property BOOL                                   displayTermsAndConditions;
 - (void) build;
 @end
