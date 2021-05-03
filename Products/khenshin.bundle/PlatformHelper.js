@@ -58,6 +58,12 @@ KhipuAutomaton.storeCookie = function(cookieName, protocol, hostname, value){
     window.webkit.messageHandlers.storeCookie.postMessage({cookie: cookieName+'|'+protocol+'|'+hostname+'|'+value});
 };
 
+
+KhipuAutomaton.setAmount = function(amount) {
+    window.webkit.messageHandlers.setAmount.postMessage({amount: amount});
+    KhipuAutomaton.setParam('khipu_amount', amount);
+};
+
 String.prototype.replaceAll = function(searchStr, replaceStr) {
     var str = this;
     
