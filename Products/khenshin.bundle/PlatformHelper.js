@@ -64,6 +64,19 @@ KhipuAutomaton.setAmount = function(amount) {
     KhipuAutomaton.setParam('khipu_amount', amount);
 };
 
+KhipuAutomaton.addUserScript = function(code) {
+    window.webkit.messageHandlers.addUserScript.postMessage({code: code});
+};
+
+KhipuAutomaton.setCustomUserAgent = function(userAgent) {
+    window.webkit.messageHandlers.setCustomUserAgent.postMessage({userAgent: userAgent});
+};
+
+KhipuAutomaton.addCustomBlockedURL = function(url) {
+    window.webkit.messageHandlers.addCustomBlockedURL.postMessage({url: url});
+};
+
+
 String.prototype.replaceAll = function(searchStr, replaceStr) {
     var str = this;
     
