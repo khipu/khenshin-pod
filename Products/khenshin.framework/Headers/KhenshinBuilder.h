@@ -30,6 +30,9 @@
 @property BOOL                                   useBarCenteredLogoInForm;
 @property UIColor *                              principalColor;
 @property UIColor *                              barTintColor;
+@property UIColor *                              hintLabelColor;
+@property UIColor *                              alternativeActionLabelColor;
+@property UIColor *                              stepNumberColor;
 @property UIColor *                              darkerPrincipalColor;
 @property UIColor *                              secondaryColor;
 @property UIColor *                              progressColor;
