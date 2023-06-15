@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "khenshin"
-  s.version      = "1.747"
+  s.version      = "1.748"
   s.summary      = "khenshin es una biblioteca que convierte sitios web en APIs read-write."
   s.description  = <<-DESC
   		khenshin es una biblioteca desarrollada por khipu.com, se utiliza para mejorar la experiencia de pago de todos los medios de pago soportados en khipu.com y para otros procesos originalmente Web.
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.author             = { "Khipu SpA" => "support@khipu.com" }
   s.platform     = :ios
   s.source       = { :git => "https://github.com/khipu/khenshin-pod.git", :tag => "#{s.version}" }
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '11.0'
   s.vendored_frameworks = 'Products/khenshin.framework'
   s.resource = "Products/khenshin.bundle"
   s.library = "xml2"
