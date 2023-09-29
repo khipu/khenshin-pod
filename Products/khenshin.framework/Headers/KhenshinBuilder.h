@@ -42,6 +42,7 @@
 @property UIColor *                              transitionBackgroundColor;
 @property UIColor *                              cellSeparatorColor;
 @property UIColor *                              tableRowSeparatorColor;
+@property UIColor *                              continueButtonTextTintColor;
 @property CGFloat                                cellSeparatorHeight;
 @property NSString *                             textColorHex;
 @property NSString *                             normalControlColorHex;
