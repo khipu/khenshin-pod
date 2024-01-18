@@ -118,7 +118,7 @@
                          parameters:(NSDictionary *) parameters
                      userIdentifier:(NSString *) userIdentifier
                 successWithResponse:(void (^)(NSDictionary *response)) success
-                failureWithResponse:(void (^)(NSDictionary *response)) failure __deprecated;
+                failureWithResponse:(void (^)(NSDictionary *response)) failure;
 
 + (void) startEngineWithAutomatonId:(NSString *) automatonId
                            animated:(BOOL) animated
@@ -126,7 +126,7 @@
                      userIdentifier:(NSString *) userIdentifier
                navigationController:(UINavigationController *) navigationController
                 successWithResponse:(void (^)(NSDictionary *response)) success
-                failureWithResponse:(void (^)(NSDictionary *response)) failure __deprecated;
+                failureWithResponse:(void (^)(NSDictionary *response)) failure;
 
 + (void (^)(NSDictionary *)) wrapCallbackThatExpectsReturnURL:(void (^)(NSURL *) ) callback;
 
