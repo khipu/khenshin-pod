@@ -27,4 +27,5 @@ Pod::Spec.new do |s|
   s.dependency "ActionSheetPicker-3.0", "2.7.1"
   s.dependency "FMDB", "2.7.12"
   s.dependency "IQKeyboardManager", "6.5.19"
+  s.pod_target_xcconfig = { 'ONLY_ACTIVE_ARCH' => 'YES' }
 end
