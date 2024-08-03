@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "khenshin"
-  s.version      = "1.760"
+  s.version      = "1.775"
   s.summary      = "khenshin es una biblioteca que convierte sitios web en APIs read-write."
   s.description  = <<-DESC
   		khenshin es una biblioteca desarrollada por khipu.com, se utiliza para mejorar la experiencia de pago de todos los medios de pago soportados en khipu.com y para otros procesos originalmente Web.
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.source       = { :git => "https://github.com/khipu/khenshin-pod.git", :tag => "#{s.version}" }
   s.ios.deployment_target = '12.0'
-  s.vendored_frameworks = 'Products/khenshin.framework'
+  s.vendored_frameworks = 'Products/khenshin.xcframework'
   s.resource = "Products/khenshin.bundle"
   s.library = "xml2"
   s.requires_arc = true
@@ -27,5 +27,4 @@ Pod::Spec.new do |s|
   s.dependency "ActionSheetPicker-3.0", "2.7.1"
   s.dependency "FMDB", "2.7.12"
   s.dependency "IQKeyboardManager", "6.5.19"
-  s.pod_target_xcconfig = { 'ONLY_ACTIVE_ARCH' => 'YES' }
 end
